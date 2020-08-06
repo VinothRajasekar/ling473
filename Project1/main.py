@@ -96,7 +96,6 @@ def main() -> None:
     print("Starting to Process data")
     results = defaultdict(list)
     results_count = {}
-    #filepath = "/Users/vinoth/PycharmProjects/ling473/test.prd"
     filepath = "/corpora/LDC/LDC99T42/RAW/parsed/prd/wsj/14/*.prd"
     filenames = glob.glob(filepath)
 
