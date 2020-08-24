@@ -14,7 +14,7 @@ C3 = u"\u0E07\u0E19\u0E21\u0E14\u0E1A\u0E01\u0E22\u0E27"
 
 
 def add_text(state, char, processed_data):
-    if state == 7 or state == 8:
+    if state == 7:
         processed_data += u" " + char
         state = 1
     elif state == 8:
