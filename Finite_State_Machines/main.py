@@ -1,27 +1,33 @@
 import glob
-from collections import defaultdict
 from typing import List, AnyStr, Any
 
-V1 = u"\u0E40\u0E41\u0E42\u0E43\u0E44"
-C1 = u"\u0E01\u0E02\u0E03\u0E04\u0E05\u0E06\u0E07\u0E08\u0E09\u0E0A\u0E0B\u0E0C\u0E0D\u0E0E\u0E0F" \
-     + u"\u0E10\u0E11\u0E12\u0E13\u0E14\u0E15\u0E16\u0E17\u0E18\u0E19\u0E1A\u0E1B\u0E1C\u0E1D\u0E1E\u0E1F" \
-     + u"\u0E20\u0E21\u0E22\u0E23\u0E24\u0E25\u0E26\u0E27\u0E28\u0E29\u0E2A\u0E2B\u0E2C\u0E2D\u0E2E"
-C2 = u"\u0E23\u0E25\u0E27\u0E19\u0E21"
-V2 = u"\u0E34\u0E35\u0E36\u0E37\u0E38\u0E39\u0E31\u0E47"
-T = u"\u0E48\u0E49\u0E4A\u0E4B"
-V3 = u"\u0E32\u0E2D\u0E22\u0E27"
-C3 = u"\u0E07\u0E19\u0E21\u0E14\u0E1A\u0E01\u0E22\u0E27"
+V1 = "\u0E40\u0E41\u0E42\u0E43\u0E44"
+C1 = "\u0E01\u0E02\u0E03\u0E04\u0E05\u0E06\u0E07\u0E08\u0E09\u0E0A\u0E0B\u0E0C\u0E0D\u0E0E\u0E0F" \
+     + "\u0E10\u0E11\u0E12\u0E13\u0E14\u0E15\u0E16\u0E17\u0E18\u0E19\u0E1A\u0E1B\u0E1C\u0E1D\u0E1E\u0E1F" \
+     + "\u0E20\u0E21\u0E22\u0E23\u0E24\u0E25\u0E26\u0E27\u0E28\u0E29\u0E2A\u0E2B\u0E2C\u0E2D\u0E2E"
+C2 = "\u0E19\u0E21\u0E23\u0E25\u0E27"
+V2 = "\u0E31\u0E34\u0E35\u0E36\u0E37\u0E38\u0E39\u0E47"
+T = "\u0E48\u0E49\u0E4A\u0E4B"
+V3 = "\u0E22\u0E27\u0E32\u0E2D"
+C3 = "\u0E07\u0E14\u0E19\u0E22\u0E27\u0E21\u0E1A\u0E01"
 
 
 def add_text(state, char, processed_data):
+    """
+    Implementation of fsm design.
+    :param state:
+    :param char:
+    :param processed_data:
+    :return: List of Parented Tree
+    """
     if state == 7:
-        processed_data += u" " + char
+        processed_data += " " + char
         state = 1
     elif state == 8:
-        processed_data += u" " + char
+        processed_data += " " + char
         state = 2
     elif state == 9:
-        processed_data += char + u" "
+        processed_data += char + " "
         state = 0
     else:
         processed_data += char
@@ -31,14 +37,13 @@ def add_text(state, char, processed_data):
 
 def process_data(data: AnyStr, fsm: dict) -> List[AnyStr]:
     """
-    Process the syntactic constituents from the LDC file.
-    Newline and tabs are stripped and joined and tokenized
-    to form a Parented Tree.
+    Implementation of fsm design.
+    :param fsm:
     :param data: syntactic constituents from the LDC files
     :return: List of Parented Tree
     """
     state = 0
-    processed_data = u""
+    processed_data = ""
 
     for char in data:
         if state in fsm:
@@ -70,8 +75,8 @@ def process_data(data: AnyStr, fsm: dict) -> List[AnyStr]:
 
 def main() -> None:
     """
-    Read LDC files and compute the constituent counts and produce final output.
-    :return: prints out final constituent count for (S..), (NP..), (VP..), VP verb (NP ...) (NP ...) ) (VP verb )
+    Read Thai text file and implement a finite state machine.
+    :return: HTML file containing thai characters built from the output of finite state machine.
     """
     state_machine = {0: {"V1": 1, "C1": 2},
                      1: {"C1": 2},
@@ -85,19 +90,17 @@ def main() -> None:
                      9: {9: 9}
                      }
 
-    results = u""
     filepath = "./fsm-input.utf8.txt"
-    # filepath = "./test.txt"
     filenames = glob.glob(filepath)
 
-    writefile = open("vinoth.html", "w+", encoding="utf-8")
+    writefile = open("vinoth.html", "w")
     writefile.write("<html>\n<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />\n<body>\n")
 
     for file in filenames:
-        with open(file, encoding="utf-8") as r:
+        with open(file) as r:
             data = r.readlines()
             for line in data:
-                results = process_data(line[:-1], state_machine)
+                results = process_data(line.strip(), state_machine)
                 writefile.write(results + "<br/>\n")
             writefile.write("</body>\n</html>")
 
