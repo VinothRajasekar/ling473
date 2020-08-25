@@ -1,5 +1,5 @@
 import glob
-from typing import List, AnyStr, Any
+from typing import AnyStr, Tuple
 
 V1 = "\u0E40\u0E41\u0E42\u0E43\u0E44"
 C1 = "\u0E01\u0E02\u0E03\u0E04\u0E05\u0E06\u0E07\u0E08\u0E09\u0E0A\u0E0B\u0E0C\u0E0D\u0E0E\u0E0F" \
@@ -12,13 +12,13 @@ V3 = "\u0E22\u0E27\u0E32\u0E2D"
 C3 = "\u0E07\u0E14\u0E19\u0E22\u0E27\u0E21\u0E1A\u0E01"
 
 
-def add_text(state, char, processed_data):
+def add_text(state: int, char: str, processed_data: AnyStr) -> Tuple[AnyStr, int]:
     """
-    Implementation of fsm design.
-    :param state:
-    :param char:
-    :param processed_data:
-    :return: List of Parented Tree
+    process thai character that are in transitions and current fsm state
+    :param state: current state of finite state machine
+    :param char: thai text character
+    :param processed_data: processed thai character that are in transitions
+    :return: processed thai character and current state
     """
     if state == 7:
         processed_data += " " + char
@@ -35,12 +35,12 @@ def add_text(state, char, processed_data):
     return processed_data, state
 
 
-def process_data(data: AnyStr, fsm: dict) -> List[AnyStr]:
+def process_data(data: AnyStr, fsm: dict) -> AnyStr:
     """
     Implementation of fsm design.
-    :param fsm:
-    :param data: syntactic constituents from the LDC files
-    :return: List of Parented Tree
+    :param fsm: states and transitions of finite state machine
+    :param data: thai text characters
+    :return: output of the finite state machine
     """
     state = 0
     processed_data = ""
