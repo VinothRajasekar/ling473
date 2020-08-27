@@ -31,7 +31,6 @@ def add_text(state: int, char: str, processed_data: AnyStr) -> Tuple[AnyStr, int
         state = 0
     else:
         processed_data += char
-
     return processed_data, state
 
 
@@ -44,7 +43,6 @@ def process_data(data: AnyStr, fsm: dict) -> AnyStr:
     """
     state = 0
     processed_data = ""
-
     for char in data:
         if state in fsm:
             val = fsm.get(state)
@@ -85,24 +83,25 @@ def main() -> None:
                      4: {"T": 5, "V3": 6, "C3": 9, "V1": 7, "C1": 8},
                      5: {"V3": 6, "C3": 9, "V1": 7, "C1": 8},
                      6: {"C3": 9, "V1": 7, "C1": 8},
-                     7: {7: 7},
-                     8: {8: 8},
-                     9: {9: 9}
+                     7: {7: 1},
+                     8: {8: 2},
+                     9: {9: 0}
                      }
 
-    filepath = "./fsm-input.utf8.txt"
+    filepath = "/opt/dropbox/19-20/473/project3/fsm-input.utf8.txt"
     filenames = glob.glob(filepath)
 
-    writefile = open("vinoth.html", "w")
+    writefile = open("vinoth.html", "w", encoding="utf-8")
     writefile.write("<html>\n<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />\n<body>\n")
 
     for file in filenames:
-        with open(file) as r:
+        with open(file, encoding='utf8') as r:
             data = r.readlines()
             for line in data:
                 results = process_data(line.strip(), state_machine)
                 writefile.write(results + "<br/>\n")
             writefile.write("</body>\n</html>")
+    writefile.close()
 
 
 if __name__ == "__main__":
